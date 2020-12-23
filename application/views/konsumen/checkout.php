@@ -13,46 +13,52 @@
 <main class="ps-main">
     <div class="ps-checkout pt-80 pb-80">
         <div class="ps-container">
-            <form class="ps-checkout__form" action="do_action" method="post">
+
+            <form class="ps-checkout__form" action="<?= base_url(
+                'konsumen/bayar_barang'
+            ) ?>" method="post">
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                         <div class="ps-checkout__billing">
                             <h3>Billing Detail</h3>
+
+
                             <div class="form-group form-group--inline">
-                                <label>First Name<span>*</span>
+                                <label>Nama Pemesan<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" name="nama_pemesan">
                             </div>
 
 
                             <div class="form-group form-group--inline">
                                 <label>Email Address<span>*</span>
                                 </label>
-                                <input class="form-control" type="email">
+                                <input class="form-control" type="email" name="email">
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label>Phone<span>*</span>
                                 </label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" name="phone">
                             </div>
                             <div class="form-group form-group--inline">
                                 <label>Address<span>*</span>
                                 </label>
-                                <textarea class="form-control" rows="5" placeholder=""></textarea>
+                                <textarea class="form-control" rows="5" placeholder="" name="alamat"></textarea>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label>Bukti Bayar<span>*</span>
                                 </label>
-                                <input type="file" tclass="form-control" rows="5" placeholder="">
+                                <input type="file" tclass="form-control" rows="5" placeholder="" name="bukti_bayar">
                             </div>
 
                             <h3 class="mt-40"> Addition information</h3>
                             <div class="form-group form-group--inline textarea">
                                 <label>Order Notes</label>
                                 <textarea class="form-control" rows="5"
-                                    placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                    placeholder="Notes about your order, e.g. special notes for delivery."
+                                    name="notes"></textarea>
                             </div>
                         </div>
                     </div>
@@ -100,6 +106,7 @@
                                                         '.'
                                                     ) ?>
                                                 </b>
+                                                <input type="hidden" value="<?= $sum_harga ?>" name="total_bayar">
                                             </td>
 
                                         </tr>
@@ -110,11 +117,21 @@
 
                                 <div class="form-group paypal">
 
-                                    <button class="ps-btn ps-btn--fullwidth">Place Order<i
-                                            class="ps-icon-next"></i></button>
+                                    <?php
+                                    $data = [];
+                                    foreach ($barang_keranjang as $item) {
+                                        array_push($data, $item->id_pesanan);
+                                    }
+
+                                    $data_pesan = implode('_', $data);
+                                    ?>
+                                    <button class="ps-btn ps-btn--fullwidth">Place
+                                        Order<i class="ps-icon-next"></i></button>
                                 </div>
                             </footer>
                         </div>
+
+                        <input type="hidden" value="<?= $data_pesan ?>" name="id_pesanan">
 
                     </div>
                 </div>

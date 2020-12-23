@@ -120,6 +120,22 @@ class Konsumen_model extends CI_model
         $this->db->update('pemesanan');
     }
 
+    public function update_pesanan($id, $data)
+    {
+        $this->db->set($data);
+        $this->db->where('id_pesanan', $id);
+        $this->db->update('pemesanan');
+    }
+
+    public function cekIdBayarLast($id_user)
+    {
+        // $query1 = "SELECT * FROM user where username='$field' or email = '$field'";
+
+        $query = "SELECT max(id_bayar)as hasil FROM `pembayaran` WHERE id_user='$id_user' GROUP BY(id_user)";
+
+        return $this->db->query($query)->row_array();
+    }
+
     // public function updateTotal($data, $id)
     // {
     //     $this->db->set($data);

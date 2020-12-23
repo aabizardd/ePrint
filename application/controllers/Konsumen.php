@@ -870,4 +870,51 @@ class Konsumen extends CI_Controller
         $this->load->view('konsumen/barang_vendor', $data);
         $this->load->view('templatesKonsumen/footer');
     }
+
+    public function bayar_barang()
+    {
+        $id_user = $this->session->userdata('id_user');
+        $tanggal_bayar = time();
+        $total_bayar = $this->input->post('total_bayar');
+        $nama_pemesan = $this->input->post('nama_pemesan');
+        $email = $this->input->post('email');
+        $phone = $this->input->post('phone');
+        $alamat = $this->input->post('alamat');
+        $bukti_bayar = $this->input->post('bukti_bayar');
+        $notes = $this->input->post('notes');
+
+        $id_pesanan = $this->input->post('id_pesanan');
+
+        $id_pesan_baru = explode('_', $id_pesanan);
+
+        $data_bayar = [
+            'id_user' => $id_user,
+            'tanggal_bayar' => $tanggal_bayar,
+            'total_bayar' => $total_bayar,
+            'nama_pemesan' => $nama_pemesan,
+            'email' => $email,
+            'phone' => $phone,
+            'alamat_rumah' => $alamat,
+            'bukti_bayar' => $bukti_bayar,
+            'notes' => $notes,
+        ];
+
+        $this->db->insert('pembayaran', $data_bayar);
+
+        $id_bayar = $this->Konsumen_model->cekIdBayarLast($id_user);
+
+        $data_update_pesanan = [
+            'status_pesanan' => 'pending',
+            'id_bayar' => $id_bayar['hasil'],
+        ];
+
+        for ($i = 0; $i < count($id_pesan_baru); $i++) {
+            $this->Konsumen_model->update_pesanan(
+                $id_pesan_baru[$i],
+                $data_update_pesanan
+            );
+        }
+
+        redirect('konsumen/cart');
+    }
 }
