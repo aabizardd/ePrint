@@ -1,5 +1,7 @@
 <?php
 
+//perubahan
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Konsumen extends CI_Controller
