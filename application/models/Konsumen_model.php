@@ -1,0 +1,232 @@
+<?php
+class Konsumen_model extends CI_model
+{
+    public function getNilai()
+    {
+        $this->db->select('*');
+        $this->db->from('feedback');
+        return $this->db->get()->result();
+    }
+
+    public function getProduct()
+    {
+        $this->db->select('*');
+        $this->db->from('postingan');
+        $this->db->join(
+            'kategori',
+            'postingan.id_kategori=kategori.id_kategori'
+        );
+        return $this->db->get()->result();
+    }
+
+    public function getKategori()
+    {
+        $query = 'SELECT * FROM kategori';
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getDetailProduct($id_posting)
+    {
+        $this->db->select('*');
+        $this->db->from('postingan');
+        $this->db->join(
+            'kategori',
+            'postingan.id_kategori=kategori.id_kategori'
+        );
+        $this->db->where('id_posting =', $id_posting);
+        return $this->db->get()->row();
+    }
+
+    public function getBarang($kategori)
+    {
+        $kategori = strtolower($kategori);
+
+        $query = "SELECT * FROM `$kategori` k JOIN kategori kt on(k.id_kategori=kt.id_kategori)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function idKategori($kategori)
+    {
+        $query = "SELECT * FROM kategori where nama_kategori = '$kategori'";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function getKonsumenData($id)
+    {
+        // return $this->db->get_where('user', array('id_user' => $id))->result_array();
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->join('role', 'user.role_id = role.role_id');
+        $this->db->where('id_user', $id);
+        return $this->db->get()->result_array();
+    }
+
+    public function cekHarga($namaKategori, $id_barang)
+    {
+        $query = "SELECT harga FROM `$namaKategori` where ID = $id_barang";
+
+        return $this->db->query($query)->row_array();
+    }
+
+    public function getCountKeranjang($idUser)
+    {
+        $this->db->select('COUNT(id_pesanan) jml');
+        $this->db->from('pemesanan');
+        $this->db->where('id_user =', $idUser);
+        $this->db->where('status_pesanan =', 'di dalam keranjang');
+        $this->db->group_by('id_user');
+
+        return $this->db->get()->row();
+    }
+
+    public function getIsiKeranjang($idUser)
+    {
+        $this->db->select('*');
+        $this->db->from('pemesanan p');
+        $this->db->join('kategori k', 'p.id_kategori=k.id_kategori');
+        $this->db->where('id_user =', $idUser);
+        $this->db->where('status_pesanan =', 'di dalam keranjang');
+
+        return $this->db->get()->result();
+    }
+
+    public function getPesananbyId($id)
+    {
+        $this->db->select('*');
+        $this->db->from('pemesanan p');
+        $this->db->join('kategori k', 'p.id_kategori=k.id_kategori');
+        $this->db->where('id_user =', $id);
+        $this->db->where('status_pesanan !=', 'pesanan selesai');
+        return $this->db->get()->result_array();
+    }
+
+    public function getAllPesananbyId($id)
+    {
+        $this->db->select('*');
+        $this->db->from('pemesanan p');
+        $this->db->join('kategori k', 'p.id_kategori=k.id_kategori');
+        $this->db->where('id_user =', $id);
+        $this->db->where('status_pesanan =', 'pesanan selesai');
+        return $this->db->get()->result_array();
+    }
+
+    public function editJumlahBarang($data, $id)
+    {
+        $this->db->set($data);
+        $this->db->where('id_pesanan', $id);
+        $this->db->update('pemesanan');
+    }
+
+    // public function updateTotal($data, $id)
+    // {
+    //     $this->db->set($data);
+    //     $this->db->where('id_pesanan', $id);
+    //     $this->db->update('pemesanan');
+    // }
+
+    // public function editProfile($data, $data2)
+    // {
+    //     $this->db->set($data);
+    //     $this->db->where('username', $this->session->userdata('username'));
+    //     $this->db->update('konsumen');
+
+    //     $this->db->set($data2);
+    //     $this->db->where('username', $this->session->userdata('username'));
+    //     $this->db->update('user');
+    // }
+
+    // public function tampilBarang()
+    // {
+    //     $query = $this->db->query('SELECT * FROM barang');
+    //     return $query->result();
+    // }
+
+    // public function getPesanan()
+    // {
+    //     $username = $this->session->userdata('username');
+    //     $query = $this->db->query(
+    //         "SELECT * FROM Pesanan where namakonsumen = '$username' and statuspemesanan = 'Pending' or statuspemesanan = 'Proses' order by idpesanan desc"
+    //     );
+    //     return $query->result();
+    // }
+
+    // public function getHistoryPesanan()
+    // {
+    //     $username = $this->session->userdata('username');
+    //     $query = $this->db->query(
+    //         "SELECT * FROM Pesanan where namakonsumen = '$username' order by idpesanan desc"
+    //     );
+    //     return $query->result();
+    // }
+
+    // public function getPesananDetail()
+    // {
+    //     $query = $this->db->query(
+    //         ' SELECT * FROM pesanan where idpesanan = ' .
+    //             $this->uri->segment('3')
+    //     );
+    //     return $query->result();
+    // }
+
+    // public function detail_data()
+    // {
+    //     $query = $this->db->query(
+    //         ' SELECT * from barang where idbarang = ' . $this->uri->segment('3')
+    //     );
+    //     return $query->result();
+    // }
+
+    // public function tambahPesanan($data)
+    // {
+    //     return $this->db->insert('pesanan', $data);
+    // }
+
+    // public function batalkanPesanan($id)
+    // {
+    //     $this->db->where('idpesanan', $id);
+    //     $this->db->delete('pesanan');
+    // }
+
+    // public function getAllVendor()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('vendor');
+    //     $this->db->join('user', 'username');
+    //     return $this->db->get()->result_array();
+    // }
+
+    // public function getBarang($id)
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('user');
+    //     $this->db->join('barang', 'user.id_user=barang.owner');
+    //     $this->db->where('id_user', $id);
+    //     return $this->db->get()->result();
+    // }
+
+    // public function getPassword()
+    // {
+    //     $username = $this->session->userdata('username');
+    //     $query = $this->db->query(
+    //         "SELECT password FROM user where username = '$username'"
+    //     );
+    //     return $query->result();
+    // }
+
+    // public function editPassword($data)
+    // {
+    //     $this->db->set($data);
+    //     $this->db->where('username', $this->session->userdata('username'));
+    //     $this->db->update('user');
+    // }
+
+    // public function editPhoto($data)
+    // {
+    //     $this->db->set($data);
+    //     $this->db->where('username', $this->session->userdata('username'));
+    //     $this->db->update('konsumen');
+    // }
+}
