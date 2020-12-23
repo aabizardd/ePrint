@@ -24,6 +24,7 @@ class Konsumen extends CI_Controller
     </button>
   </div>'
         );
+
         redirect('auth');
     }
 
@@ -897,7 +898,7 @@ class Konsumen extends CI_Controller
             'email' => $email,
             'phone' => $phone,
             'alamat_rumah' => $alamat,
-            'bukti_bayar' => $bukti_bayar,
+            'bukti_bayar' => $this->_uploadFile(),
             'notes' => $notes,
         ];
 
@@ -918,5 +919,69 @@ class Konsumen extends CI_Controller
         }
 
         redirect('konsumen/cart');
+    }
+
+    private function _uploadFile()
+    {
+        $namaFiles = $_FILES['bukti_bayar']['name'];
+        $ukuranFile = $_FILES['bukti_bayar']['size'];
+        $type = $_FILES['bukti_bayar']['type'];
+        $eror = $_FILES['bukti_bayar']['error'];
+
+        // $nama_file = str_replace(" ", "_", $namaFiles);
+        $tmpName = $_FILES['bukti_bayar']['tmp_name'];
+        // $nama_folder = "assets_user/file_upload/";
+        // $file_baru = $nama_folder . basename($nama_file);
+
+        // if ((($type == "video/mp4") || ($type == "video/3gpp")) && ($ukuranFile < 8000000)) {
+
+        //   move_uploaded_file($tmpName, $file_baru);
+        //   return $file_baru;
+        // }
+
+        if ($eror === 4) {
+            $this->session->set_flashdata(
+                'mm',
+                '<div class="alert alert-danger alert-dismissible show" role="alert">
+      Chose an image or video first!
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>'
+            );
+
+            redirect('konsumen/checkout');
+
+            return false;
+        }
+
+        $ekstensiGambarValid = ['jpg', 'jpeg', 'png'];
+        $ekstensiGambar = explode('.', $namaFiles);
+        $ekstensiGambar = strtolower(end($ekstensiGambar));
+        if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
+            $this->session->set_flashdata(
+                'mm',
+                '<div class="alert alert-danger alert-dismissible show" role="alert">
+      Your uploaded file is not image/video
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>'
+            );
+
+            redirect('konsumen/checkout');
+            return false;
+        }
+
+        $namaFilesBaru = uniqid();
+        $namaFilesBaru .= '.';
+        $namaFilesBaru .= $ekstensiGambar;
+
+        move_uploaded_file(
+            $tmpName,
+            'assets/foto/bukti_bayar/' . $namaFilesBaru
+        );
+
+        return $namaFilesBaru;
     }
 }

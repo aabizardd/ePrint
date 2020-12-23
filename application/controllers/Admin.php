@@ -75,7 +75,7 @@ class Admin extends CI_Controller
 	  </div>'
             );
             redirect('admin/accVendor');
-        } elseif($status == 3){
+        } elseif ($status == 3) {
             $status = 'pesanan dikirim';
             $data = [
                 'status_pesanan' => $status,
@@ -90,9 +90,9 @@ class Admin extends CI_Controller
 		  <span aria-hidden="true">&times;</span>
 		</button>
       </div>'
-    );
-        redirect('admin/accVendor');
-        } elseif($status == 4){
+            );
+            redirect('admin/accVendor');
+        } elseif ($status == 4) {
             $status = 'pesanan selesai';
             $data = [
                 'status_pesanan' => $status,
@@ -107,8 +107,8 @@ class Admin extends CI_Controller
 		  <span aria-hidden="true">&times;</span>
 		</button>
       </div>'
-    );
-    redirect('konsumen/statusPemesanan');
+            );
+            redirect('konsumen/statusPemesanan');
         }
     }
 

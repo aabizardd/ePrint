@@ -16,7 +16,7 @@
 
             <form class="ps-checkout__form" action="<?= base_url(
                 'konsumen/bayar_barang'
-            ) ?>" method="post">
+            ) ?>" method="post" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 ">
                         <div class="ps-checkout__billing">
