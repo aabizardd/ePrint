@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://bf13bb8ee3a6.ngrok.io/vera/';
+$config['base_url'] = 'http://164789e9b705.ngrok.io/vera/';
 
 /*
 |--------------------------------------------------------------------------
